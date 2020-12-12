@@ -70,22 +70,9 @@ public class TableFactory
 	{	return load( name, new File(location) );
 	} 
 
-	/* Create a table from some form stored on the disk.
-	 * <p>
-	 * At present, the filename extension is used to determine
-	 * the data format, and only a comma-separated-value file
-	 * is recognized. (The file name must end in .csv).
-	 * Eventually, other extensions (like .xml) will be
-	 * recognized.
-	 *
-	 * @param the file name. The table name is the string to the
-	 * 			left of the extension. For example, if the file
-	 * 			is "foo.csv," then the table name is "foo."
-	 * @param the directory within which the file is found.
-	 *
-	 * @throws java.io.IOException if the filename extension is not
-	 * 			recognized.
-	 */
+	/*
+	여기서 최초로 임포트 할수있는 데이터베이스들 추가할 수 있음.
+	현재는 csv만 존재재	 */
 	public static Table load( String name, File directory )
 													throws IOException
 	{

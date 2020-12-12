@@ -69,6 +69,7 @@ public class Console
 		submitButton.addActionListener
 		(	new ActionListener()
 			{	public void actionPerformed( ActionEvent e )
+					// 여기서 모든 SQL 메세지를 처리한다. 여기부터 분석을 시작하면 됨
 				{	processSQL();
 				}
 			}
@@ -149,8 +150,14 @@ public class Console
 
 		sqlIn.setText("");
 
-
+	/*
+	 진입 포인트
+	 */
 		for( int i = 0; i < statements.length; ++i )
+		/* 각 쿼리문마다 for문으로 처리함. 아래는 그냥 개별 쿼리당 처리로 보면 됨.
+		executeUpdate는 데이터를 추가,삭제,수정하는 쿼리문을 실행함.
+		executeQuery는 데이터를 조회함.
+		 */
 		{	try
 			{	statements[i] = statements[i].trim();
 				if( statements[i].length() == 0 )
@@ -220,6 +227,8 @@ public class Console
 		return b.toString();
 	}
 	//----------------------------------------------------------------------
+	// 여기까진 전부 출력 및 기본 그래픽 관련 부분이라 볼 필요 없음.
+
 	private void openDatabase()
 	{	
 		String databaseName;
