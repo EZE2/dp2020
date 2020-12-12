@@ -35,23 +35,6 @@ import com.holub.database.*;
 import com.holub.database.jdbc.adapters.*;
 import com.holub.text.ParseFailure;
 
-/** A limited version of the Connection class. All methods
- *  undocumented base-class overrides throw a
- *  {@link SQLException} if called.
- *  <p>
- *  Note that you can't
- *  mix non-autocommit behavior with explicit
- *  SQL begin/commit statements. For example, if you
- *  turn off autocommit mode (which causes a SQL begin
- *  to be issued), and then execute a SQL begin manually,
- *  a call to `commit` will commit the inner transaction,
- *  but not the outer one. In effect, you can't do
- *  nested transactions using the JDBC {@link #commit} or
- *  {@link #rollback}  methods.
- *
- * @include /etc/license.txt
- */
-
 public class JDBCConnection extends ConnectionAdapter
 {
 	private Database database;
@@ -69,10 +52,6 @@ public class JDBCConnection extends ConnectionAdapter
 	{	database = new Database( uri );
 	}
 
-	/** Close a database connection. A commit is issued
-	 *  automatically if auto-commit mode is disabled.
-	 *  @see #setAutoCommit
-	 */
 	public void close() throws SQLException
 	{	try
 		{	
@@ -93,37 +72,18 @@ public class JDBCConnection extends ConnectionAdapter
 	{	return new JDBCStatement(database);
 	}
 
-	/** Terminate the current transactions and start a new
-	 *  one. Does nothing if auto-commit mode is on.
-	 *  @see #setAutoCommit
-	 */
 	public void commit() throws SQLException
 	{	autoCommitState.commit();
 	}
 
-	/** Roll back the current transactions and start a new
-	 *  one. Does nothing if auto-commit mode is on.
-	 *  @see #setAutoCommit
-	 */
 	public void rollback() throws SQLException
 	{	autoCommitState.rollback();
 	}
 
-	/** 
-	 * Once set true, all SQL statements form a stand-alone
-	 * transaction. A begin is issued automatically when
-	 * auto-commit mode is disabled so that the {@link #commit}
-	 * and {@link #rollback} methods will work correctly.
-	 * Similarly, a commit is issued automatically when
-	 * auto-commit mode is enabled.
-	 * <p>
-	 * Auto-commit mode is on by default.
-	 */
 	public void setAutoCommit( boolean enable ) throws SQLException
 	{	autoCommitState.setAutoCommit(enable);
 	}
 
-	/** Return true if auto-commit mode is enabled */
 	public boolean getAutoCommit() throws SQLException
 	{	return autoCommitState == enabled;
 	}

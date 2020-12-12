@@ -32,11 +32,6 @@ import java.util.*;
 import com.holub.database.*;
 import com.holub.database.jdbc.adapters.*;
 
-/** A limited version of the result-set metadata class. All methods
- *  not shown throw a {@link SQLException} if called.
- *
- *  @include /etc/license.txt
- */
 public class JDBCResultSetMetaData extends ResultSetMetaDataAdapter
 {
 	private final Cursor cursor;

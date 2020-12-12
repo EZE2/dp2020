@@ -29,10 +29,6 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-/***
- * @include /etc/license.txt
- */
-
 public class ConnectionAdapter implements java.sql.Connection
 {
 	public ConnectionAdapter() throws SQLException {} 	// Not an error if this one is called.

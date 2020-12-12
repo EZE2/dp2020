@@ -27,10 +27,6 @@
 package com.holub.database.jdbc.adapters;
 import java.sql.*;
 
-/***
- * @include /etc/license.txt
- */
-
 public class ResultSetMetaDataAdapter implements java.sql.ResultSetMetaData
 {
 public ResultSetMetaDataAdapter(){}

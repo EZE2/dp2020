@@ -32,10 +32,6 @@ import java.io.*;
 import com.holub.database.*;
 import com.holub.database.jdbc.adapters.*;
  
-/***
- * @include /etc/license.txt
- */
-
 public class JDBCStatement extends StatementAdapter
 {	private Database database;
 

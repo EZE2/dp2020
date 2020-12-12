@@ -29,37 +29,6 @@ package com.holub.database;
 import java.io.*;
 import java.util.*;
 
-/***
- *	Pass this exporter to a {@link Table#export} implementation to
- *	create a comma-sparated-value version of a {@link Table}.
- *	For example:
- *	<PRE>
- *	Table people  = TableFactory.create( ... );
- *	//...
- *	Writer out = new FileWriter( "people.csv" );
- *	people.export( new CSVExporter(out) );
- *	out.close();
- *	</PRE>
- *	The output file for a table called "name" with
- *	columns "first," "last," and "addrId" would look
- *	like this:
- *	<PRE>
- *	name
- *	first,	last,	addrId
- *	Fred,	Flintstone,	1
- *	Wilma,	Flintstone,	1
- *	Allen,	Holub,	0
- *	</PRE>
- *	The first line is the table name, the second line
- *	identifies the columns, and the subsequent lines define
- *	the rows.
- *
- * @include /etc/license.txt
- * @see Table
- * @see Table.Exporter
- * @see CSVImporter
- */
-
 public class CSVExporter implements Table.Exporter
 {	private final Writer out;
 	private 	  int	 width;

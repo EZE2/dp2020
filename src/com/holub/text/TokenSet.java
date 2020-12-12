@@ -29,61 +29,13 @@ package com.holub.text;
 import java.util.*;
 import java.util.regex.*;
 
-/***
- *  A token set is a collection of tokens that define all possible
- *  lexical units of some language. TokenSet objects serve as
- *  token factories, and all tokens created by a particular
- *  TokenSet are in that set. (see {@link #create}).
- *  {@link Scanner} ojbects use <code>TokenSet</code>s to
- *  recognize input tokens. Each {@link Token} is responsible for
- *  deciding whether it comes next in the input, and the
- *  tokens examine the input in the order that they were created.
- *	<p>
- *  See the source code for {@link com.holub.database.Database}
- *  (in the distribution jar) for an example of how a token set
- *  is used in conjunction with a Scanner.
- *
- *	@include /etc/license.txt
- */
-
 public class TokenSet
 {
 	private Collection members = new ArrayList();
 
-	/** Return an iterator across the Token pool. This iterator
-	 *  is guaranteed to return the tokens in the order that
-	 *  {@link #create} was called. You can use this iterator
-	 *  to list all the tokens in a given set.
-	 */
-
 	public Iterator iterator()
 	{	return members.iterator();
 	}
-
-	/**********************************************************************
-	 * Create a Token based on a specification and add it to the current
-	 * set.
-	 * <p>
-	 * An appropriate token type is chosen by examining the input
-	 * specification. In particular, a {@link RegexToken} is
-	 * created unless the input string contains no regular-expression
-	 * metacharacters ({i \\[]{}()$^*+?|}) or starts with a single-quote
-	 * mark ('). In this case, a
-	 * {@link WordToken} is created if the specification ends
-	 * in any character that could occur in a Java identifier;
-	 * otherwise a {@link SimpleToken} is created.
-	 * If a string that starts with a single-quote mark also
-	 * ends with a single-quote mark, the end-quote mark
-	 * is discarded. The end-quote mark is optional.
-	 * <p>
-	 * Tokens are always extracted
-	 * from the beginning of a String, so the characters that
-	 * precede the token are irrelevant.
-	 *
-	 * @see WordToken
-	 * @see RegexToken
-	 * @see SimpleToken
-	 */
 
 	public Token create( String spec )
 	{	Token token;
@@ -116,9 +68,6 @@ public class TokenSet
 		return token;
 	}
 
-	/** Return true if the string argument contains any of the
-	 *  following characters: \\[]{}$^*+?|()
-	 */
 	private static final boolean containsRegexMetacharacters(String s)
 	{	// This method could be implemented more efficiently,
 		// but its not called very often.

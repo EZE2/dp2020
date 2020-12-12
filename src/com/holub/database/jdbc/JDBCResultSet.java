@@ -32,28 +32,12 @@ import java.text.*;
 import com.holub.database.*;
 import com.holub.database.jdbc.adapters.*;
 
-/** A limited version of the result-set class. All methods
- *  not shown throw a {@link SQLException} if called. Note
- *  the the underlying table actually holds nothing but
- *  strings, so the numeric accessors
- *  (e.g. {@link #getDouble})
- *  are doing string-to-number and number-to-string
- *  conversions. These conversions might fail if the
- *  underlying String doesn't represent a number.
- *
- * @include /etc/license.txt
- */
-
 public class JDBCResultSet extends ResultSetAdapter
 {
 	private 	   final Cursor cursor;
 	private static final NumberFormat  format =
 								NumberFormat.getInstance();
 
-	/** Wrap a result set around a Cursor. The cursor
-	 *  should never have been advanced; just pass this constructor
-	 *  the return value from {@link Table#rows}.
-	 */
 	public JDBCResultSet(Cursor cursor) throws SQLException
 	{	this.cursor = cursor;
 	}

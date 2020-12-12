@@ -42,30 +42,18 @@ public final class Database
 	 */
 	private File 	  location     = new File(".");
 
-	/** The number of rows modified by the last
-	 *  INSERT, DELETE, or UPDATE request.
-	 */
 	private int		  affectedRows = 0;
 
 
 	private final Map tables = new TableMap( new HashMap() );
 
-	/** The current transaction-nesting level, incremented for
-	 *  a BEGIN and decremented for a COMMIT or ROLLBACK.
-	 */
 	private int transactionLevel = 0;
 
-	/** A Map proxy that hanldes lazy instatiation of tables
-	 *  from the disk.
-	 */
 	private final class TableMap implements Map
 	{ 		
 		private final Map realMap;
 		public TableMap( Map realMap ){	this.realMap = realMap; }
 
-		/** If the requested table is already in memory, return it.
-		 *  Otherwise load it from the disk.
-		 */
 		public Object get( Object key )
 		{	String tableName = (String)key;
 			try
@@ -207,45 +195,20 @@ public final class Database
 
 	//@declarations-end
 	//--------------------------------------------------------------
-	/** Create a database object attached to the current directory.
-	 *  You can specify a different directory after the object
-	 *  is created by calling {@link #useDatabase}.
-	 */
 	public Database() { }
 
-	/** Use the indicated directory for the database */
 	public Database( URI directory ) throws IOException
 	{	useDatabase( new File(directory) );
 	}
 
-	/**  Use the indicated directory for the database */
 	public Database( File path ) throws IOException
 	{	useDatabase( path );
 	}
 
-	/**  Use the indicated directory for the database */
 	public Database( String path ) throws IOException
 	{	useDatabase( new File(path)  );
 	}
 
-	/** Use this constructor to wrap one or more Table
-	 *  objects so that you can access them using
-	 *  SQL. You may add tables to this database using
-	 *	SQL "CREATE TABLE" statements, and you may safely
-	 *  extract a snapshot of a table that you create
-	 *  in this way using:
-	 *  <PRE>
-	 *	Table t = execute( "SELECT * from " + tableName );
-	 *  </PRE>
-	 *  @param database an array of tables to use as
-	 *  				the database.
-	 *  @param path		The default directory to search for
-	 *  				tables, and the directory to which
-	 *  				tables are dumped. Tables specified
-	 *  				in the <code>database</code> argument
-	 *  				are used in place of any table
-	 *  				on the disk that has the same name.
-	 */
 	public Database( File path, Table[] database ) throws IOException
 	{	useDatabase( path );
 		for( int i = 0; i < database.length; ++i )
@@ -255,16 +218,10 @@ public final class Database
 	//--------------------------------------------------------------
 	// Private parse-related workhorse functions.
 
-	/** Asks the scanner to throw a {@link ParseFailure} object
-	 *  that highlights the current input position.
-	 */
 	private void error( String message ) throws ParseFailure
 	{	throw in.failure( message.toString() );
 	}
 
-	/** Like {@link #error}, but throws the exception only if the
-	 *  test fails.
-	 */
 	private void verify( boolean test, String message ) throws ParseFailure
 	{	if( !test )
 			throw in.failure( message );
@@ -276,38 +233,18 @@ public final class Database
 	// The SQL interpreter calls these methods to
 	// do the actual work.
 
-	/** Use an existing "database." In the current implementation,
-	 *  a "database" is a directory and tables are files within
-	 *  the directory. An active database (opened by a constructor,
-	 *  a USE DATABASE directive, or a prior call to the current
-	 *  method) is closed and committed before the new database is
-	 *  opened.
-	 *  @param path A {@link File} object that specifies directory
-	 *  		that represents the database.
-	 *  @throws IOException if the directory that represents the
-	 *  		database can't be found.
-	 */
 	public void useDatabase( File path ) throws IOException
 	{	dump();
 		tables.clear();	// close old database if there is one
 		this.location = path;
 	}
 
-	/** Create a database by opening the indicated directory. All
-	 *  tables must be files in that directory. If you don't call
-	 *  this method (or issue a SQL CREATE DATABASE directive), then
-	 *  the current directory is used.
-	 *  @throws IOException if the named directory can't be opened.
-	 */
 	public void createDatabase( String name ) throws IOException
 	{	File location = new File( name );
 		location.mkdir();
 		this.location = location;
 	}
 
-	/** Create a new table. If a table by this name exists, it's
-	 *  overwritten.
-	 */
 	public void createTable( String name, List columns )
 	{	String[] columnNames = new String[ columns.size() ];
 		int i = 0;
@@ -318,9 +255,6 @@ public final class Database
 		tables.put( name, newTable );
 	}
 
-	/** Destroy both internal and external (on the disk) versions
-	 *  of the specified table.
-	 */
 	public void dropTable( String name )
 	{	tables.remove( name );	// ignore the error if there is one.
 
@@ -329,15 +263,6 @@ public final class Database
 			tableFile.delete();
 	}
 
-	/** Flush to the persistent store (e.g. disk) all tables that
-	 *  are "dirty" (which have been modified since the database
-	 *  was last committed). These tables will not be flushed
-	 *  again unless they are modified after the current dump()
-	 *  call. Nothing happens if no tables are dirty.
-	 *  <p>
-	 *  The present implemenation flushes to a .csv file whose name
-	 *  is the table name with a ".csv" extension added.
-	 */
 	public void dump() throws IOException
 	{	Collection values = tables.values();
 		if( values != null )
@@ -354,11 +279,6 @@ public final class Database
 		}
 	}
 
-	/** Return the number of rows that were affected by the most recent
-	 *  {@link #execute} call. Zero is returned for all operations except
-	 *  for INSERT, DELETE, or UPDATE.
-	 */
-
 	public int affectedRows()
 	{	return affectedRows;
 	}
@@ -366,8 +286,6 @@ public final class Database
 	//----------------------------------------------------------------------
 	// Transaction processing.
 
-	/** Begin a transaction
-	 */
 	public void begin()
 	{	++transactionLevel;
 
@@ -376,9 +294,6 @@ public final class Database
 			((Table) i.next()).begin();
 	}
 
-	/** Commit transactions at the current level.
-	 *  @throws NoSuchElementException if no <code>begin()</code> was issued.
-	 */
 	public void commit() throws ParseFailure
 	{	
 		assert transactionLevel > 0 : "No begin() for commit()";
@@ -394,9 +309,6 @@ public final class Database
 		}
 	}
 
-	/** Roll back transactions at the current level
-	 *  @throws NoSuchElementException if no <code>begin()</code> was issued.
-	 */
 	public void rollback() throws ParseFailure
 	{	assert transactionLevel > 0 : "No begin() for commit()";
 		--transactionLevel;
@@ -412,21 +324,6 @@ public final class Database
 	}
 	//@transactions-end
 	//@parser-start
-	/******************************************************************* 
-	 *  Execute a SQL statement. If an exception is tossed and we are in the
-	 *  middle of a transaction (a begin has been issued but no matching
-	 *  commit has been seen), the transaction is rolled back.
-	 *
-	 *  @return a {@link Table} holding the result of a SELECT,
-	 *  	or null for statements other than SELECT.
-	 *  @param expression a String holding a single SQL statement. The
-	 *  	complete statement must be present (you cannot break a long
-	 *  	statement into multiple calls), and text
-	 *  	following the SQL statement is ignored.
-	 *  @throws com.holub.text.ParseFailure if the SQL is corrupt.
-	 *  @throws IOException Database files couldn't be accessed or created.
-	 *  @see #affectedRows()
-	 */
 
 	public Table execute( String expression ) throws IOException, ParseFailure
 	{	try
@@ -447,41 +344,6 @@ public final class Database
 		}
 	}
 
-	/**
-     * <PRE>
-     * statement
-     *      ::= CREATE  DATABASE IDENTIFIER
-     *      |   CREATE  TABLE    IDENTIFIER LP idList RP
-     *      |   DROP    TABLE    IDENTIFIER
-     *      |   USE     DATABASE IDENTIFIER
-     *      |   BEGIN    [WORK|TRAN[SACTION]]
-     *      |   COMMIT   [WORK|TRAN[SACTION]]
-     *      |   ROLLBACK [WORK|TRAN[SACTION]]
-     *      |   DUMP
-     *
-     *      |   INSERT  INTO IDENTIFIER [LP idList RP]
-     *                              VALUES LP exprList RP
-     *      |   UPDATE  IDENTIFIER SET IDENTIFIER
-     *                              EQUAL expr [WHERE expr]
-     *      |   DELETE  FROM IDENTIFIER WHERE expr
-     *      |   SELECT  idList [INTO table] FROM idList [WHERE expr]
-     * </PRE>
-	 * <p>
-	 *
-	 * @return a Table holding the result of a SELECT, or null for
-	 *  	other SQL requests. The result table is treated like
-	 *  	a normal database table if the SELECT contains an INTO
-	 *  	clause, otherwise it's a temporary table that's not
-	 *  	put into the database.
-	 *
-	 * @throws ParseFailure something's wrong with the SQL
-	 * @throws IOException a database or table couldn't be opened
-	 * 		or accessed.
-	 * @see #createDatabase
-	 * @see #createTable
-	 * @see #dropTable
-	 * @see #useDatabase
-	 */
 	private Table statement() throws ParseFailure, IOException
 	{
 		affectedRows = 0;	// is modified by UPDATE, INSERT, DELETE
@@ -679,16 +541,6 @@ public final class Database
 		}
 		return expressions;
 	}
-
-	/** Top-level expression production. Returns an Expression
-	 *  object which will interpret the expression at runtime
-	 *  when you call it's evaluate() method.
-	 *  <PRE>
-     *  expr    ::=     andExpr expr'
-     *  expr'   ::= OR  andExpr expr'
-     *          |   e
-     *  </PRE>
-	 */
 
 	private Expression expr()			throws ParseFailure
 	{	Expression left = andExpr();
@@ -1095,11 +947,6 @@ public final class Database
 			this.columnName = columnName;
 		}
 
-		/** Using the cursor, extract the referenced cell from
-		 *  the current Row and return it's contents as a String.
-		 *  @return the value as a String or null if the cell
-		 *  		was null.
-		 */
 		public String toString( Cursor[] participants )
 		{	Object content = null;
 
@@ -1131,12 +978,6 @@ public final class Database
 			return (content == null) ? null : content.toString();
 		}
 
-		/** Using the cursor, extract the referenced cell from the
-		 *  current row of the appropriate table, convert the
-		 *  contents to a {@link NullValue}, {@link NumericValue},
-		 *  or {@link StringValue}, as appropriate, and return
-		 *  that value object.
-		 */
 		public Value value( Cursor[] participants )
 		{	String s = toString( participants );
 			try

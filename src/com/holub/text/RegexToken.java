@@ -29,29 +29,12 @@ package com.holub.text;
 import java.util.*;
 import java.util.regex.*;
 
-/** Matches a token specified by a regular expression.
- *  (as described in the {@link java.util.regex.Pattern}
- *  class.
- *
- *	@include /etc/license.txt
- *
- *  @see java.util.regex.Pattern
- *  @see Token
- */
-
 public class RegexToken implements Token
 {
 	private 	   Matcher 		matcher;
 	private final  Pattern 		pattern;
 	private final  String       id;
 
-	/** Create a token.
-	 *  @param description a regular expression
-	 *  		({@linkplain java.util.Pattern see}) that describes
-	 *  		the set of lexemes associated with this token.
-	 *  		The expression is case insensitive, so the
-	 *  		expression "ABC" also recognizes "abc".
-	 */
 	public RegexToken(String description)
 	{   id = description;
 		pattern = Pattern.compile(description, Pattern.CASE_INSENSITIVE);

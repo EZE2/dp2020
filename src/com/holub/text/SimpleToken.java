@@ -29,22 +29,9 @@ package com.holub.text;
 import java.util.*;
 import java.util.regex.*;
 
-/** Matches a simple symbol that doesn't have to be on a "word"
- *  boundary; punctuation, for example. SimpleToken
- *  is very efficient, but does not recognize characters in
- *  a case-insensitive way, as does {@link WordToken} and
- *  {@link RegexToken}.
- *
- *	@include /etc/license.txt
- */
-
 public class SimpleToken implements Token
 {	
 	private final  String 	pattern;
-
-	/** Create a token.
-	 *  @param pattern a string that defines a literal-match lexeme.
-	 */
 
 	public SimpleToken( String pattern )
 	{	this.pattern = pattern.toLowerCase();

@@ -28,26 +28,11 @@ package com.holub.tools;
 
 import java.util.*;
 
-/*** A simple implementation of java.util.Iterator that enumerates
- *   over arrays. You can use this class to pass arrays to
- *   methods that normally accept {@link Iterator} arguments.
- *   (It's an example of the Adapter design pattern in that it
- *   makes an array appear to implement the <code>Iterator</code>
- *   interface.)
- *
- *	@include /etc/license.txt
- */
-
 public final class ArrayIterator implements Iterator
 {
 	private int	 			position = 0;
 	private final Object[]	items;
 
-	/**
-	 * Create and <code>ArrayIterator</code>.
-	 * @param items the array whose elements will be returned,
-	 * 	in turn, by each {@link #next} call.
-	 */
 	public ArrayIterator(Object[] items){ this.items = items; }
 
 	public boolean hasNext()
@@ -65,11 +50,6 @@ public final class ArrayIterator implements Iterator
 								"ArrayIterator.remove()");
 	}
 
-	/** Not part of the Iterator interface, returns the data
-	 *  set in array form. A clone of the wrapped array
-	 *  is actually returned, so modifying the returned array
-	 *  will not affect the iteration at all.
-	 */
 	public Object[] toArray()
 	{	return (Object[]) items.clone();
 	}

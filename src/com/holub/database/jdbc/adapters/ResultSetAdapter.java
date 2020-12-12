@@ -30,9 +30,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 
-/***
- * @include /etc/license.txt
- */
 public class ResultSetAdapter implements java.sql.ResultSet {public ResultSetAdapter() {}
 	
 public boolean next() throws SQLException {throw new SQLException("ResultSet.next() unsupported");}

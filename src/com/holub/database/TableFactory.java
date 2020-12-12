@@ -28,43 +28,21 @@ package com.holub.database;
 
 import java.io.*;
 
-/***
- * @include /etc/license.txt
- */
-
 public class TableFactory
 {	
-	/** Create an empty table with the specified columns.
-	 *  @param name	the table name
-	 *  @param columns names of all the columns
-	 *  @return the table
-	 */
 	public static Table create( String name, String[] columns )
 	{	return new ConcreteTable( name, columns );
 	}
 
-	/** Create a table from information provided by a
-	 *	{@link Table.Importer} object.
-	 */
-	public static Table create( Table.Importer importer ) 
+	public static Table create( Table.Importer importer )
 												throws IOException
 	{	return new ConcreteTable( importer );
 	}
 
-	/** This convenience method is equivalent to
-	 *  <code>load(name, new File(".") );</code>
-	 *
-	 *	@see #load(String,File)
-	 */
 	public static Table load( String name ) throws IOException
 	{	return load( name, new File(".") );
 	} 
 
-	/** This convenience method is equivalent to
-	 *  <code>load(name, new File(location) );</code>
-	 *
-	 *	@see #load(String,File)
-	 */
 	public static Table load( String name, String location )
 												throws IOException
 	{	return load( name, new File(location) );

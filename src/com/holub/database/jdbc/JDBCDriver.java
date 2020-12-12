@@ -31,15 +31,6 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.net.*;
 
-/** A JDBC driver for a small in-memory database that wraps
- *  the {@link com.holub.database.Database} class. See that
- *  class for a discussion of the supported SQL.
- *
- *  @include /etc/license.txt
- *
- *  @see com.holub.database.Database
- */
-
 public class JDBCDriver implements java.sql.Driver
 {
 

@@ -28,10 +28,6 @@ package com.holub.database.jdbc;
 
 import java.sql.*;
 
-/***
- * @include /etc/license.txt
- */
-
 public class JDBCTest
 {
 	static String[] data =

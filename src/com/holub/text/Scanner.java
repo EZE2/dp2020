@@ -30,95 +30,6 @@ import java.util.Iterator;
 import java.io.*;
 import com.holub.text.ParseFailure;
 
-/***
- *  A Scanner lets you read a file as a set of input tokens.
- *	<p>
- *  See the source code for {@link com.holub.database.Database}
- *  (in the distribution jar) for an example of how a token set
- *  is used in conjunction with a Scanner. Here's a stripped-down
- *  version:
- *  <p>First create a token set:
- *  <PRE>
-	private static final TokenSet tokens = new TokenSet();
-
-	private static final Token
-		COMMA		= tokens.create( "'," 		),
-		EQUAL		= tokens.create( "'=" 		),
-		LP			= tokens.create( "'(" 		),
-		RP 			= tokens.create( "')" 		),
-		DOT			= tokens.create( "'." 		),
-		STAR		= tokens.create( "'*" 		),
-		SLASH		= tokens.create( "'/" 		),
-		AND			= tokens.create( "'AND"		),
-		BEGIN		= tokens.create( "'BEGIN"	),
-		CREATE		= tokens.create( "'CREATE"	),
-		//...
-		INTEGER		= tokens.create( "(small|tiny|big)?int(eger)?"),
-		IDENTIFIER	= tokens.create( "[a-zA-Z_0-9/\\\\:~]+"		);
-	</PRE>
-	Then create and initialize the scanner. The following method
-	scans input from a string (as compared to a file):
-	<PRE>
-	private Scanner in;
-
-	public Table execute( String expression ) throws IOException, ParseFailure
-	{	try
-		{	this.expression   = expression;
-			<b>in				  = new Scanner(tokens, expression);</b>
-			<b>in.advance();	// advance to the first token.</b>
-			return statement();
-		}
-		catch( ParseFailure e )
-		{	if( transactionLevel > 0 )
-				rollback();
-		}
-		//...
-	}
-	</PRE>
-	The Scanner uses a "match/advance" strategy. Rather than read tokens that you
-	might have to push back, you first check if the next token is the one you
-	want, and then advance past it if so.
-	<PRE>
-	// statement
-	//      ::= CREATE  DATABASE IDENTIFIER
-	//      |   CREATE  TABLE    IDENTIFIER LP idList RP
-	//
-	void statement()
-	{
-		// The matchAdvance(CREATE) call skips past (and returns)
-		// the CREATE token if it's the next input token, otherwise
-		// it returns null.
-
-		if( <b>in.matchAdvance(CREATE) != null</b> )
-		{
-			// Here, I'm doing match and advance as two separate
-			// operations.
-
-			if( <b>in.match( DATABASE )</b> )
-			{	<b>in.advance();</b>
-				createDatabase( in.required( IDENTIFIER ) );
-			}
-			else // must be CREATE TABLE
-			{	
-				// This required() call throws an exception
-				// if the next input token isn't a TABLE. If
-				// a TABLE token is found, then we'll advance past
-				// it automatically.
-
-				<b>in.required( TABLE );</b>
-				String tableName = in.required( IDENTIFIER );
-				in.required( LP );
-				createTable( tableName, declarations() );
-				in.required( RP );
-			}
-		}
-		//...
-	}
-	</PRE>
- *
- *	@include /etc/license.txt
- */
-
 public class Scanner
 {	private Token			currentToken	= new BeginToken();
 	private BufferedReader	inputReader 	= null;
@@ -128,16 +39,10 @@ public class Scanner
 
 	private TokenSet tokens;
 
-	/** Create a Scanner for the indicated token set, which
-	 *  will get input from the indicated string.
-	 */
 	public Scanner( TokenSet tokens, String input )
 	{	this( tokens, new StringReader(input) );	
 	}
 
-	/** Create a Scanner for the indicated token set, which
-	 *  will get input from the indicated Reader.
-	 */
 	public Scanner( TokenSet tokens, Reader inputReader )
 	{	this.tokens 	 = tokens;
 		this.inputReader =
@@ -148,9 +53,6 @@ public class Scanner
 		loadLine();
 	}
 
-	/** Load the next input line and adjust the line number
-	 *  and inputPosition offset.
-	 */
 	private boolean loadLine()
 	{	try
 		{	inputLine = inputReader.readLine();
@@ -165,19 +67,10 @@ public class Scanner
 		}
 	}
 
-	/** Return true if the current token matches the
-	 *  candidate token.
-	 */
 	public boolean match( Token candidate )
 	{	return currentToken == candidate;
 	}
 
-	/** Advance the input to the next token and return the current
-	 *  token (the one in the input before the advance).
-	 *  This returned token is valid only until the
-	 *  next <code>advance()</code> call (at which time the
-	 *  lexeme may change, for example).
-	 */
 	public Token advance() throws ParseFailure
 	{	try
 		{	
@@ -212,26 +105,11 @@ public class Scanner
 		return currentToken;
 	}
 
-	/**
-	 * Throw a {@link ParseFailure} object initialized for the current
-	 * input position. This method lets a parser that's using the
-	 * current scanner report an error in a way that identifies
-	 * where in the input the error occurred.
-	 * @param message the "message" (as returned by
-	 * 			{@link java.lang.Throwable.getMessage}) to attach
-	 * 			to the thrown <code>RuntimeException</code> object.
-	 * @throws	ParseFailure always.
-	 */
 	public ParseFailure failure( String message )
 	{ 	return new ParseFailure(message,
 						inputLine, inputPosition, inputLineNumber);
 	}
 
-	/** Combines the match and advance operations. Advance automatically
-	 *  if the match occurs.
-	 *  @return the lexeme if there was a match and the input was advanced,
-	 *  	null if there was no match (the input is not advanced).
-	 */
 	public String matchAdvance( Token candidate ) throws ParseFailure
 	{	if( match(candidate) )
 		{	String lexeme = currentToken.lexeme();
@@ -241,13 +119,6 @@ public class Scanner
 		return null;
 	}
 
-	/**  If the specified candidate is the current token,
-	 *   advance past it and return the lexeme; otherwise,
-	 *   throw an exception with the rror message
-	 *   "XXX Expected".
-	 *   @throws ParseFailure if the required token isn't the
-	 *   			current token.
-	 */
 	public final String required( Token candidate ) throws ParseFailure
 	{	String lexeme =	matchAdvance(candidate);
 		if( lexeme == null )

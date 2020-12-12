@@ -31,39 +31,6 @@ import com.holub.tools.ArrayIterator;
 import java.io.*;
 import java.util.*;
 
-/***
- *	Pass this importer to a {@link Table} constructor (such
- *	as
- *	{link com.holub.database.ConcreteTable#ConcreteTable(Table.Importer)}
- *	to initialize
- *	a <code>Table</code> from
- *	a comma-sparated-value repressentation. For example:
- *	<PRE>
- *	Reader in = new FileReader( "people.csv" );
- *	people = new ConcreteTable( new CSVImporter(in) );
- *	in.close();
- *	</PRE>
- *	The input file for a table called "name" with
- *	columns "first," "last," and "addrId" would look
- *	like this:
- *	<PRE>
- *	name
- *	first,	last,	addrId
- *	Fred,	Flintstone,	1
- *	Wilma,	Flintstone,	1
- *	Allen,	Holub,	0
- *	</PRE>
- *	The first line is the table name, the second line
- *	identifies the columns, and the subsequent lines define
- *	the rows.
- *
- * @include /etc/license.txt
- *
- * @see Table
- * @see Table.Importer
- * @see CSVExporter
- */
-
 public class CSVImporter implements Table.Importer
 {	private BufferedReader  in;			// null once end-of-file reached
 	private String[]        columnNames;

@@ -30,24 +30,6 @@ import java.io.*;
 import java.util.*;
 import com.holub.tools.ArrayIterator;
 
-/**
- * A concrete implementation of the {@link Table} interface that implements an
- * in-memory table. Most of the methods of this class are documented in the
- * {@link Table} class.
- * <p>
- * It's best to create instances of this class using the {@link TableFactory}
- * rather than <code>new</code>.
- * <p>
- * Note that a ConcreteTable is both serializable and "Cloneable", so you can
- * easily store it onto the disk in binary form or make a copy of it. Clone
- * implements a shallow copy, however, so it can be used to implement a rollback
- * of an insert or delete, but not an update.
- * <p>
- * This class is not thread safe.
- *
- * @include /etc/license.txt
- */
-
 /* package */ class ConcreteTable implements Table {
 	// Supporting clone() complicates the following declarations. In
 	// particular, the fields can't be final because they're modified
@@ -67,21 +49,11 @@ import com.holub.tools.ArrayIterator;
 	private transient boolean isDirty = false;
 	private transient LinkedList transactionStack = new LinkedList();
 
-	/**********************************************************************
-	 * Create a table with the given name and columns.
-	 * 
-	 * @param tableName the name of the table.
-	 * @param an        array of Strings that specify the column names.
-	 */
 	public ConcreteTable(String tableName, String[] columnNames) {
 		this.tableName = tableName;
 		this.columnNames = (String[]) columnNames.clone();
 	}
 
-	/**********************************************************************
-	 * Return the index of the named column. Throw an IndexOutOfBoundsException if
-	 * the column doesn't exist.
-	 */
 	private int indexOf(String columnName) {
 		for (int i = 0; i < columnNames.length; ++i)
 			if (columnNames[i].equals(columnName))
@@ -92,9 +64,6 @@ import com.holub.tools.ArrayIterator;
 
 	// @simple-construction-end
 	//
-	/**********************************************************************
-	 * Create a table using an importer. See {@link CSVImporter} for an example.
-	 */
 	public ConcreteTable(Table.Importer importer) throws IOException {
 		importer.startTable();
 
@@ -439,9 +408,6 @@ import com.holub.tools.ArrayIterator;
 		return new UnmodifiableTable(resultTable);
 	}
 
-	/**
-	 * This version of select does a join
-	 */
 	public Table select(Selector where, String[] requestedColumns, // {=ConcreteTable.select.default}
 			Table[] otherTables) {
 		// If we're not doing a join, use the more efficient version
@@ -471,21 +437,6 @@ import com.holub.tools.ArrayIterator;
 		return new UnmodifiableTable(resultTable);
 	}
 
-	/**
-	 * Think of the Cartesian product as a kind of tree. That is given one table
-	 * with rows A and B, and another table with rows C and D, you can look at the
-	 * product like this:
-	 *
-	 * root ______|______ | | A B ____|____ ____|____ | | | | C D C D
-	 *
-	 * The tree is as deep as the number of tables we're joining. Every possible
-	 * path from the root to a leaf represents one row in the Cartesian product. The
-	 * current method effectively traverses this tree recursively without building
-	 * an actual tree. It assembles an array of iterators (one for each table)
-	 * positioned at the current place in the set of rows as it recurses to a leaf,
-	 * and then asks the selector whether or not to approve that row. It then goes
-	 * up a notch, advances the correct iterator, and recurses back down.
-	 */
 	private static void selectFromCartesianProduct(int level, Selector where, String[] requestedColumns,
 			Table[] allTables, Cursor[] allIterators, Table resultTable) {
 		allIterators[level] = allTables[level].rows();
@@ -507,21 +458,6 @@ import com.holub.tools.ArrayIterator;
 		}
 	}
 
-	/**
-	 * Insert an approved row into the result table:
-	 * 
-	 * <PRE>
-	 * 		for( every requested column )
-	 * 			for( every table in the join )
-	 * 				if the requested column is in the current table
-	 * 					add the associated value to the result table
-	 *
-	 * </PRE>
-	 * 
-	 * Only one column with a given name is added, even if that column appears in
-	 * multiple tables. Columns in tables at the beginning of the list take
-	 * precedence over identically named columns that occur later in the list.
-	 */
 	private static void insertApprovedRows(Table resultTable, String[] requestedColumns, Cursor[] allTables) {
 
 		Object[] resultRow = new Object[requestedColumns.length];
@@ -538,20 +474,6 @@ import com.holub.tools.ArrayIterator;
 		resultTable.insert( /* requestedColumns, */ resultRow);
 	}
 
-	/**
-	 * A collection variant on the array version. Just converts the collection to an
-	 * array and then chains to the other version
-	 * ({@linkplain #select(Selector,String[],Table[]) see}).
-	 * 
-	 * @param requestedColumns the value returned from the {@link #toString} method
-	 *                         of the elements of this collection are used as the
-	 *                         column names.
-	 * @param other            Collection of tables to join to the current one,
-	 *                         <code>null</code>if none.
-	 * @throws ClassCastException if any elements of the <code>other</code>
-	 *                            collection do not implement the {@link Table}
-	 *                            interface.
-	 */
 	public Table select(Selector where, Collection requestedColumns, Collection other) {
 		String[] columnNames = null;
 		Table[] otherTables = null;

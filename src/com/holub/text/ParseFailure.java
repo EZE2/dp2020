@@ -26,11 +26,6 @@
  */
 package com.holub.text;
 
-/** Thrown in the event of a Scanner (or parser) failure
- *
- *	@include /etc/license.txt
- */
-
 public class ParseFailure extends Exception
 {
 	private final String inputLine;
@@ -47,21 +42,6 @@ public class ParseFailure extends Exception
 		this.inputLine 		 = inputLine;
 		this.inputLineNumber = inputLineNumber;
 	}
-
-	/** Returns a String that shows the current input line and a
-	 *  pointer indicating the current input position.
-	 *  In the following sample, the input is positioned at the
-	 * 	&#64; sign on input line 17:
-	 *  <PRE>
-	 *  Line 17:
-	 *  a = b + &#64; c;
-	 *  ________^
-	 *  </PRE>
-	 *
-	 *  Note that the official "message"  [returned from 
-	 *  {@link Throwable#getMessage()}] is not included in the
-	 *  error report.
-	 */
 
 	public String getErrorReport()
 	{	

@@ -26,16 +26,6 @@
  */
 package com.holub.text;
 
-/** The Begin token is special in that it has no width, and
- *	doesn't match anything in the input. It's used solely
- *	as a convenient initial value for the current-token
- *	field of the {@link Scanner}, but is made public in case
- *	you want to build your own scanner.
- *
- *	@include /etc/license.txt
- *	@see Token
- */
-
 public class BeginToken implements Token
 {	public boolean match(String input, int offset){ return false; }
 	public String lexeme()						  { return ""; }

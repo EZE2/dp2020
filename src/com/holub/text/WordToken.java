@@ -29,27 +29,9 @@ package com.holub.text;
 import java.util.*;
 import java.util.regex.*;
 
-/** Recognize a token that looks like a word. The match
- *  is case insensitive. To be recognized, the input
- *  must match the pattern passed to the constructor,
- *  and must be followed by a non-letter-or-digit.
- *  The returned lexeme is always all-lower-case
- *  letters, regardless of what the actual input
- *  looked like.
- *
- *	@include /etc/license.txt
- *	@see Token
- */
-
 public class WordToken implements Token
 {	
 	private final String 	pattern;
-
-	/** Create a token.
-	 *  @param pattern a regular expression
-	 *  		({@linkplain java.util.Pattern see}) that describes
-	 *  		the set of lexemes associated with this token.
-	 */
 
 	public WordToken( String pattern )
 	{	this.pattern = pattern.toLowerCase();

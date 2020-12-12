@@ -31,19 +31,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.sql.*;
 
-/** This program is a toy database-console window that lets you
- *  exercise the HolubSQL database. It opens up a databse, then
- *  displays two windows, one in which you enter SQL and another
- *  that shows the result of the operation. If an exception is
- *  encountered, a window showing the stack trace pops up.
- *
- *  <p>Bugs:
- *  The window does not resize elegantly, so I've disabled
- *  resising altogether rather than fix the problem.
- *
- * @include /etc/license.txt
- */
-
 public class Console
 {
 	private static final String driverName = "com.holub.database.jdbc.JDBCDriver";

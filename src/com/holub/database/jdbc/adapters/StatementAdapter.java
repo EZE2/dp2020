@@ -26,9 +26,6 @@
  */
 package com.holub.database.jdbc.adapters;
 import java.sql.*;
-/***
- * @include /etc/license.txt
- */
 public class StatementAdapter implements java.sql.Statement
 {
 public StatementAdapter() {}
