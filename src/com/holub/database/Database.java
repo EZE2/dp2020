@@ -263,6 +263,23 @@ public final class Database
 			tableFile.delete();
 	}
 
+	// 실제 익스포트 메소드는 여기
+	public void HTMLdump() throws IOException
+	{	Collection values = tables.values();
+		if( values != null )
+		{	for( Iterator i = values.iterator(); i.hasNext(); )
+		{	Table current = (Table ) i.next();
+			if( current.isDirty() )
+			{	Writer out =
+					new FileWriter(
+							new File(location, current.name() + ".html"));
+				current.export( new HTMLExporter(out) );
+				out.close();
+			}
+		}
+		}
+	}
+
 	public void dump() throws IOException
 	{	Collection values = tables.values();
 		if( values != null )
@@ -349,6 +366,7 @@ public final class Database
 		affectedRows = 0;	// is modified by UPDATE, INSERT, DELETE
 
 		// These productions map to public method calls:
+		// 명령 처리하는 포인트
 
 		if( in.matchAdvance(CREATE) != null )
 		{	if( in.match( DATABASE ) )
@@ -426,6 +444,7 @@ public final class Database
 			affectedRows = doDelete( tableName, expr() );
 		}
 		else if( in.matchAdvance(SELECT) != null )
+		// *일시 columns에 null 전달.
 		{	List columns = idList();
 
 			String into = null;

@@ -28,6 +28,8 @@ package com.holub.database;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import com.holub.tools.ArrayIterator;
 
 /* package */ class ConcreteTable implements Table {
@@ -49,6 +51,8 @@ import com.holub.tools.ArrayIterator;
 	private transient boolean isDirty = false;
 	private transient LinkedList transactionStack = new LinkedList();
 
+	// 컬럼들 이름을 받아 테이블을 만든다.
+	// select *문의 에러포인트임.
 	public ConcreteTable(String tableName, String[] columnNames) {
 		this.tableName = tableName;
 		this.columnNames = (String[]) columnNames.clone();
@@ -86,6 +90,7 @@ import com.holub.tools.ArrayIterator;
 
 	// ----------------------------------------------------------------------
 	public void export(Table.Exporter exporter) throws IOException {
+		// 익스포터를 활용해 파일로 저장하는 부분
 		exporter.startTable();
 		exporter.storeMetadata(tableName, columnNames.length, rowSet.size(), new ArrayIterator(columnNames));
 
@@ -426,6 +431,22 @@ import com.holub.tools.ArrayIterator;
 		// Create places to hold the result of the join and to hold
 		// iterators for each table involved in the join.
 
+		// 오류나는 포인트
+		// requestedColumns가 null이면 *로 판단하여 모든 컬럼을 더한다.
+		if (requestedColumns == null) {
+			ArrayList<String> totalColumns = new ArrayList<>();
+			for(Table t: allTables){
+				ConcreteTable tempTable = (ConcreteTable) t;
+
+				for (String colname: tempTable.columnNames){
+					totalColumns.add(colname);
+				}
+
+			}
+			requestedColumns = totalColumns.stream().distinct().toArray(String[]::new); // .toArray(new String[0]);
+		}
+
+
 		Table resultTable = new ConcreteTable(null, requestedColumns);
 		Cursor[] envelope = new Cursor[allTables.length];
 
@@ -475,6 +496,8 @@ import com.holub.tools.ArrayIterator;
 	}
 
 	public Table select(Selector where, Collection requestedColumns, Collection other) {
+
+		// requestedColumns는 이터레이터 패턴 사용했음.
 		String[] columnNames = null;
 		Table[] otherTables = null;
 

@@ -158,6 +158,7 @@ public class Console
 						"\nStatus=" + String.valueOf(status) + "\n");
 				}
 				else
+					// 여기서 오류생김!
 				{	ResultSet results = statement.executeQuery( statements[i] );
 					sqlOut.setText(
 							sqlOut.getText() + line +
