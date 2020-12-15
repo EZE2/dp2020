@@ -53,7 +53,17 @@ public class XMLExporter implements Table.Exporter
 		String tableHeader = String.format("<%s>", this.tableName);
 		out.write(tableHeader);
 		out.write("\n");
-//		storeRow( columnNames ); // comma separated list of columns ids
+
+		// Import의 편의성을 위한 열 데이터 저장
+		storeColumn();
+	}
+
+	private void storeColumn()  throws IOException{
+		out.write("<cols>");
+		for (String s : this.columnNames){
+			out.write(String.format("<%s/>", s));
+		}
+		out.write("</cols>\n");
 	}
 
 	public void storeRow( Iterator data ) throws IOException
@@ -71,10 +81,11 @@ public class XMLExporter implements Table.Exporter
 				out.write( datum.toString() );
 				out.write(String.format("</%s>", this.columnNames.get(idx)));
 
-			if( --i > 0 )
-				out.write(String.format("<%s>", this.columnNames.get(idx)));
-				out.write("NULL");
-				out.write(String.format("</%s>", this.columnNames.get(idx)));
+//			if( --i > 0 )
+//				out.write(String.format("<%s>", this.columnNames.get(idx)));
+//				out.write("NULL");
+//				out.write(String.format("</%s>", this.columnNames.get(idx)));
+			idx++;
 		}
 		out.write("</row>\n");
 	}

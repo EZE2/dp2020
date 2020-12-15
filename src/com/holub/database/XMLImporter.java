@@ -28,24 +28,30 @@ package com.holub.database;
 
 import com.holub.tools.ArrayIterator;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class CSVImporter implements Table.Importer
+public class XMLImporter implements Table.Importer
 {	private BufferedReader  in;			// null once end-of-file reached
 	private String[]        columnNames;
 	private String          tableName;
 
-	public CSVImporter( Reader in )
+	public XMLImporter(Reader in )
 	{	this.in = in instanceof BufferedReader
 						? (BufferedReader)in
                         : new BufferedReader(in)
 	                    ;
 	}
 	public void startTable()			throws IOException
-	{
-		tableName   = in.readLine().trim();
-		columnNames = in.readLine().split("\\s*,\\s*");
+	{	in.readLine(); // 첫 줄은 버림.
+		tableName   = in.readLine().trim().replaceAll("<|>", "");
+		String columnLine = in.readLine().trim().replaceAll("(<cols>)|(</cols>)","");
+		columnNames = columnLine.replaceAll("<","").replaceAll("/>","```").trim().split("```");
 	}
 	public String loadTableName()		throws IOException
 	{	return tableName;
@@ -54,17 +60,26 @@ public class CSVImporter implements Table.Importer
 	{	return columnNames.length;
 	}
 	public Iterator loadColumnNames()	throws IOException
-	{	return new ArrayIterator(columnNames);  //{=CSVImporter.ArrayIteratorCall}
+	{	return new ArrayIterator(columnNames);
 	}
 
 	public Iterator loadRow()			throws IOException
 	{	Iterator row = null;
 		if( in != null )
 		{	String line = in.readLine();
-			if( line == null )
+
+		// XMLImporter에서는 null 대신 </테이블명>의 양식으로 파일이 끝남. 따라서 이 부분을 핸들링함.
+			if( line.equals(String.format("</%s>", tableName)))
 				in = null;
-			else
-				row = new ArrayIterator( line.split("\\s*,\\s*"));
+			else {
+				// 각 값의 리스트를 넣어야 함.
+				String rowdata = line.trim().replaceAll("(<row>)|(</row>)", "");
+
+				rowdata = rowdata.replaceAll("<.*?>","``");
+				rowdata = rowdata.substring(2, rowdata.length()-2);
+				row = new ArrayIterator(rowdata.split("````"));
+//				row = new ArrayIterator(rowdata.replaceAll("<.*?>","``").replaceAll("````","``").split("``"));
+			}
 		}
 		return row;
 	}

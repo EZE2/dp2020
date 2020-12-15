@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<address>
+<cols><addrId/><street/><city/><state/><zip/></cols>
+<row><addrId>0</addrId><street>12 MyStreet</street><city>Berkeley</city><state>CA</state><zip>99999</zip></row>
+<row><addrId>1</addrId><street>34 Quarry Ln.</street><city>Bedrock</city><state>XX</state><zip>00000</zip></row>
+</address>

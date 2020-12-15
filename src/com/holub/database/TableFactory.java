@@ -50,7 +50,7 @@ public class TableFactory
 
 	/*
 	여기서 최초로 임포트 할수있는 데이터베이스들 추가할 수 있음.
-	현재는 csv만 존재재	 */
+	현재는 csv만 존재	 */
 	public static Table load( String name, File directory )
 													throws IOException
 	{

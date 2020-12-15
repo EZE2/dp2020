@@ -280,6 +280,23 @@ public final class Database
 		}
 	}
 
+	public void XMLdump() throws IOException
+	{
+		Collection values = tables.values();
+		if( values != null )
+		{	for( Iterator i = values.iterator(); i.hasNext(); )
+		{	Table current = (Table ) i.next();
+			if( current.isDirty() )
+			{	Writer out =
+					new FileWriter(
+							new File(location, current.name() + ".xml"));
+				current.export( new XMLExporter(out) );
+				out.close();
+			}
+		}
+		}
+	}
+
 	public void dump() throws IOException
 	{	Collection values = tables.values();
 		if( values != null )
