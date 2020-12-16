@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import com.holub.tools.ArrayIterator;
 
-/* package */ class ConcreteTable implements Table {
+/* package */ class ConcreteTable extends TableFactory implements Table {
 	// Supporting clone() complicates the following declarations. In
 	// particular, the fields can't be final because they're modified
 	// in the clone() method. Also, the rows field has to be declared

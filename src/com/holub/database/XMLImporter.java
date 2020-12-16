@@ -33,8 +33,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class XMLImporter implements Table.Importer
 {	private BufferedReader  in;			// null once end-of-file reached

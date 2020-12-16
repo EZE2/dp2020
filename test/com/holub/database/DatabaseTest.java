@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 
 public class DatabaseTest {
     @Test
+    // 1번 기능 테스트
     public void HTMLdump() throws IOException, ParseFailure {
         Database theDatabase = new Database();
 
@@ -41,21 +42,35 @@ public class DatabaseTest {
                 System.out.println(result.toString());
         }
 
+        // 출력 결과는 Dbase/address.html에 저장됨.
         theDatabase.HTMLdump();
-        System.out.println("Database PASSED");
-        System.exit(0);
+        Table t = theDatabase.execute("SELECT * FROM address");
+        // 열이 5개가 맞는지 테스트
+        assertEquals(5,t.rows().columnCount());
+        System.out.println(t.toString());
     }
 
+    // 3번 요구사항 테스트
     @Test
     public void doselect() throws Exception {
         Database db = new Database("C:/dp2020");
         String testSQL = "select * from address, name where address.addrId = name.addrId";
 
         Table result = db.execute(testSQL);
+
+        assertEquals(7, result.rows().columnCount());
         System.out.println(result.toString());
+        
+        // 기존에 되던 여러 테이블 SELECT문도 테스트
+        String  testSQL2 = "select street from address, name where address.addrId = name.addrId";
+        Table result2 = db.execute(testSQL2);
+        assertEquals(1, result2.rows().columnCount());
+        System.out.println(result2.toString());
+        
 
     }
 
+    // 2번 기능 테스트 - Export
     @Test
     public void XMLdump() throws IOException, ParseFailure {
         Database theDatabase = new Database();
@@ -82,9 +97,11 @@ public class DatabaseTest {
             if (result != null)    // it was a SELECT of some sort
                 System.out.println(result.toString());
         }
-
+        // 출력 결과는 Dbase/address.xml에 저장됨.
         theDatabase.XMLdump();
-        System.out.println("Database PASSED");
-        System.exit(0);
+        Table t = theDatabase.execute("SELECT * FROM address");
+        // 열이 5개가 맞는지 테스트
+        assertEquals(5,t.rows().columnCount());
+        System.out.println(t.toString());
     }
 }

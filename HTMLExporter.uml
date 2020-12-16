@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.holub.database.HTMLExporter</OriginalElement>
+  <nodes>
+    <node x="283.6666666666667" y="0.0">com.holub.database.Table</node>
+    <node x="632.0" y="160.0">com.holub.database.CSVExporter</node>
+    <node x="156.0" y="160.0">com.holub.database.CSVImporter</node>
+    <node x="488.0" y="80.0">com.holub.database.Table.Exporter</node>
+    <node x="82.83333333333331" y="80.0">com.holub.database.Table.Importer</node>
+    <node x="0.0" y="160.0">com.holub.database.XMLImporter</node>
+    <node x="312.0" y="160.0">com.holub.database.HTMLExporter</node>
+    <node x="476.0" y="160.0">com.holub.database.XMLExporter</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.holub.database.XMLImporter" target="com.holub.database.Table.Importer">
+      <point x="0.0" y="-15.0" />
+      <point x="68.0" y="135.0" />
+      <point x="110.83333333333331" y="135.0" />
+      <point x="-28.0" y="15.0" />
+    </edge>
+    <edge source="com.holub.database.HTMLExporter" target="com.holub.database.Table.Exporter">
+      <point x="0.0" y="-15.0" />
+      <point x="384.0" y="135.0" />
+      <point x="506.6666666666667" y="135.0" />
+      <point x="-37.333333333333314" y="15.0" />
+    </edge>
+    <edge source="com.holub.database.Table.Exporter" target="com.holub.database.Table">
+      <point x="0.0" y="-15.0" />
+      <point x="544.0" y="55.0" />
+      <point x="349.6666666666667" y="55.0" />
+      <point x="22.0" y="15.0" />
+    </edge>
+    <edge source="com.holub.database.XMLExporter" target="com.holub.database.Table.Exporter">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.holub.database.CSVImporter" target="com.holub.database.Table.Importer">
+      <point x="0.0" y="-15.0" />
+      <point x="224.0" y="135.0" />
+      <point x="166.83333333333331" y="135.0" />
+      <point x="28.0" y="15.0" />
+    </edge>
+    <edge source="com.holub.database.Table.Importer" target="com.holub.database.Table">
+      <point x="0.0" y="-15.0" />
+      <point x="138.83333333333331" y="55.0" />
+      <point x="305.6666666666667" y="55.0" />
+      <point x="-22.0" y="15.0" />
+    </edge>
+    <edge source="com.holub.database.CSVExporter" target="com.holub.database.Table.Exporter">
+      <point x="0.0" y="-15.0" />
+      <point x="700.0" y="135.0" />
+      <point x="581.3333333333334" y="135.0" />
+      <point x="37.33333333333337" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="384.0" y="95.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

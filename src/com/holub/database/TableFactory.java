@@ -28,8 +28,7 @@ package com.holub.database;
 
 import java.io.*;
 
-public class TableFactory
-{	
+public class TableFactory {
 	public static Table create( String name, String[] columns )
 	{	return new ConcreteTable( name, columns );
 	}

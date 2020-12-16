@@ -65,10 +65,6 @@ public class HTMLExporter implements Table.Exporter
 				out.write( datum.toString() );
 				out.write("</th>");
 
-//			if( --i > 0 )
-//				out.write("<th>");
-//				out.write("NULL");
-//				out.write("</th>");
 		}
 		out.write("</tr><br/>");
 	}

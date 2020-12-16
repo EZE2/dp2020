@@ -26,7 +26,7 @@
  */
 package com.holub.database;
 
-interface Selector
+public interface Selector
 {
 	boolean approve( Cursor[] rows );
 

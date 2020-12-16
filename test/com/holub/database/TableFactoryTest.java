@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class TableFactoryTest {
 
-    // XMLImporter 테스트
+    // 2번 기능 - XMLImporter 테스트
     @Test
     public void load() throws IOException {
         Reader in = new FileReader( new File( "C:/dp2020/Dbase", "address.xml"));
